@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export interface OfferSelectionProps {
   isStateSupported: boolean | null;
@@ -15,6 +16,60 @@ const OfferSelection: React.FC<OfferSelectionProps> = ({
   handleGoBack,
   scrollTargetId = 'state-selection-header',
 }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Use refs to track button elements
+  const buttonRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+
+  // Handle button clicks to add button class to URL
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      event.preventDefault();
+      const target = event.currentTarget as HTMLElement;
+      const buttonClass = ['t1m', 't1y', 't2m', 't2y', 't3m', 't3y'].find(cls =>
+        target.classList.contains(cls)
+      );
+
+      if (buttonClass && target instanceof HTMLAnchorElement) {
+        // Get the current URL from the button's href
+        const currentUrl = new URL(target.href);
+        // Add the button class to the URL
+        currentUrl.searchParams.set('buttonClass', buttonClass);
+        // Navigate to the updated URL
+        window.location.href = currentUrl.toString();
+      }
+    };
+
+    // Get current refs
+    const currentRefs = buttonRefs.current;
+
+    // Add event listeners to all tracked buttons
+    currentRefs.forEach((button, key) => {
+      if (button) {
+        button.addEventListener('click', handleClick as EventListener);
+      }
+    });
+
+    // Cleanup function
+    return () => {
+      currentRefs.forEach((button, key) => {
+        if (button) {
+          button.removeEventListener('click', handleClick as EventListener);
+        }
+      });
+    };
+  }, [router]);
+
+  const getCheckoutUrl = (baseUrl: string, buttonClass?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('redirect');
+    if (buttonClass) {
+      params.set('buttonClass', buttonClass);
+    }
+    const queryString = params.toString();
+    return `${baseUrl}${queryString ? `?${queryString}` : ''}`;
+  };
   return (
     <div className="w-full pt-8">
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -97,13 +152,21 @@ const OfferSelection: React.FC<OfferSelectionProps> = ({
                 {isStateSupported ? (
                   <>
                     <a
-                      href="#"
+                      ref={el => {
+                        if (el) buttonRefs.current.set('t1m', el);
+                        else buttonRefs.current.delete('t1m');
+                      }}
+                      href={getCheckoutUrl('https://secure.vnsh.com/vnshtrnsp/checkout', 't1m')}
                       className="flex-1 bg-[#28a745] text-white hover:bg-[#24883b] hover:text-white text-center py-2 px-1 rounded font-medium transition-colors text-xs sm:text-sm whitespace-nowrap"
                     >
                       Activate Monthly
                     </a>
                     <a
-                      href="#"
+                      ref={el => {
+                        if (el) buttonRefs.current.set('t1y', el);
+                        else buttonRefs.current.delete('t1y');
+                      }}
+                      href={getCheckoutUrl('https://secure.vnsh.com/vnshtrnsp/checkout', 't1y')}
                       className="flex-1 bg-[#28a745] text-white hover:bg-[#24883b] hover:text-white text-center py-2 px-1 rounded font-medium transition-colors text-xs sm:text-sm whitespace-nowrap"
                     >
                       Activate Yearly
@@ -201,13 +264,21 @@ const OfferSelection: React.FC<OfferSelectionProps> = ({
                 {isStateSupported ? (
                   <>
                     <a
-                      href="#"
+                      ref={el => {
+                        if (el) buttonRefs.current.set('t2m', el);
+                        else buttonRefs.current.delete('t2m');
+                      }}
+                      href={getCheckoutUrl('https://secure.vnsh.com/vnshtrnsp/checkout', 't2m')}
                       className="flex-1 bg-[#28a745] text-white hover:bg-[#24883b] hover:text-white text-center py-2 px-1 rounded font-medium transition-colors text-xs sm:text-sm whitespace-nowrap"
                     >
                       Activate Monthly
                     </a>
                     <a
-                      href="#"
+                      ref={el => {
+                        if (el) buttonRefs.current.set('t2y', el);
+                        else buttonRefs.current.delete('t2y');
+                      }}
+                      href={getCheckoutUrl('https://secure.vnsh.com/vnshtrnsp/checkout', 't2y')}
                       className="flex-1 bg-[#28a745] text-white hover:bg-[#24883b] hover:text-white text-center py-2 px-1 rounded font-medium transition-colors text-xs sm:text-sm whitespace-nowrap"
                     >
                       Activate Yearly
@@ -305,13 +376,21 @@ const OfferSelection: React.FC<OfferSelectionProps> = ({
                 {isStateSupported ? (
                   <>
                     <a
-                      href="#"
+                      ref={el => {
+                        if (el) buttonRefs.current.set('t3m', el);
+                        else buttonRefs.current.delete('t3m');
+                      }}
+                      href={getCheckoutUrl('https://secure.vnsh.com/vnshtrnsp/checkout', 't3m')}
                       className="flex-1 bg-[#28a745] text-white hover:bg-[#24883b] hover:text-white text-center py-2 px-1 rounded font-medium transition-colors text-xs sm:text-sm whitespace-nowrap"
                     >
                       Activate Monthly
                     </a>
                     <a
-                      href="#"
+                      ref={el => {
+                        if (el) buttonRefs.current.set('t3y', el);
+                        else buttonRefs.current.delete('t3y');
+                      }}
+                      href={getCheckoutUrl('https://secure.vnsh.com/vnshtrnsp/checkout', 't3y')}
                       className="flex-1 bg-[#28a745] text-white hover:bg-[#24883b] hover:text-white text-center py-2 px-1 rounded font-medium transition-colors text-xs sm:text-sm whitespace-nowrap"
                     >
                       Activate Yearly

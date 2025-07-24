@@ -71,7 +71,11 @@ const FooterLinks: React.FC<{ loadInfo: (id: string) => void }> = ({ loadInfo })
   </div>
 );
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  showContent?: boolean;
+}
+
+const Footer: React.FC<FooterProps> = ({ showContent = false }) => {
   const [modalId, setModalId] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
@@ -103,7 +107,8 @@ const Footer: React.FC = () => {
   return (
     <footer className="w-full mt-2 bg-white">
       <div className="pt-1 pb-8 text-black bg-white">
-        <div className="pt-1 pb-4">
+        {/* Three columns section - hidden initially */}
+        <div className={`pt-1 pb-4 transition-all duration-500 ${showContent ? 'block' : 'hidden'}`}>
           <div className="box-border min-w-[250px] max-w-6xl mx-auto px-4 flex flex-wrap justify-around gap-6">
             <FooterColumn
               imgUrl="/contentimages/vnsh_money_back_guarantee_footer.webp"
@@ -124,6 +129,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
+        {/* Copyright and links section - always visible */}
         <div className="flex flex-col items-center">
           <div className="text-center text-black">
             © <b>2025 VNSH.com</b> All Rights Reserved.

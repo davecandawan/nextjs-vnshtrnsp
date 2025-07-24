@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
 // Import critical components directly
 import Navbar from '@/components/Navbar/Navbar';
-import Content from '@/components/Content/Content';
+import Content, { ContentProps } from '@/components/Content/Content';
 
 // Lazy load non-critical components
 const Footer = dynamic(() => import('@/components/Footer/Footer'), {
@@ -20,13 +21,18 @@ const BackgroundWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function Home() {
+  const [showContent, setShowContent] = useState(false);
+
   return (
     <>
       <Navbar />
       <BackgroundWrapper>
         <main className="min-h-screen">
-          <Content />
-          <Footer />
+          <Content 
+            onShowContent={() => setShowContent(true)} 
+            showContent={showContent} 
+          />
+          <Footer showContent={showContent} />
         </main>
       </BackgroundWrapper>
     </>
