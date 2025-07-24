@@ -44,6 +44,8 @@ const OfferSelection = dynamic<OfferSelectionProps>(
   }
 );
 
+import VideoEventBridge from '../VidalyticsVideo/VideoEventBridge';
+
 const VidalyticsVideo = dynamic(() => import('../VidalyticsVideo/VidalyticsVideo'), {
   ssr: false,
   loading: () => (
@@ -336,6 +338,14 @@ const Content: React.FC<ContentProps> = ({ showContent, onShowContent }) => {
         {/* Video Section */}
         <div className="w-full max-w-4xl mx-auto -mt-4">
           <SafeVidalyticsVideo />
+            <VideoEventBridge
+              onShowContent={() => {
+                if (!showContent) onShowContent();
+              }}
+              onFiveSeconds={() => {
+                if (!showModal && !showContent) setShowModal(true);
+              }}
+            />
         </div>
 
         {/* Content that should be hidden initially */}
