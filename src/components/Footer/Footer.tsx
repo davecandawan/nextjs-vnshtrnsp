@@ -108,7 +108,9 @@ const Footer: React.FC<FooterProps> = ({ showContent = false }) => {
     <footer className="w-full mt-2 bg-white">
       <div className="pt-1 pb-8 text-black bg-white">
         {/* Three columns section - hidden initially */}
-        <div className={`pt-1 pb-4 transition-all duration-500 ${showContent ? 'block' : 'hidden'}`}>
+        <div
+          className={`pt-1 pb-4 transition-all duration-500 ${showContent ? 'block' : 'hidden'}`}
+        >
           <div className="box-border min-w-[250px] max-w-6xl mx-auto px-4 flex flex-wrap justify-around gap-6">
             <FooterColumn
               imgUrl="/contentimages/vnsh_money_back_guarantee_footer.webp"
@@ -132,7 +134,7 @@ const Footer: React.FC<FooterProps> = ({ showContent = false }) => {
         {/* Copyright and links section - always visible */}
         <div className="flex flex-col items-center">
           <div className="text-center text-black">
-            © <b>2025 VNSH.com</b> All Rights Reserved.
+            © <b>{new Date().getFullYear()} VNSH.com</b> All Rights Reserved.
           </div>
           <FooterLinks loadInfo={loadInfo} />
         </div>
